@@ -11,27 +11,9 @@ const vuexLocal = new VuexPersistence({
 
 export default new Vuex.Store({
   state: {
-    todoList: [
-      {
-        id: 1,
-        name: 'Wake Up',
-        description: 'very very long text very very long text very very long text',
-        isComplete: false,
-      },
-      {
-        id: 2,
-        name: 'Code',
-        description: 'very very long text very very long text very very long text',
-        isComplete: false,
-      },
-      {
-        id: 3,
-        name: 'Eat',
-        description: 'very very long text very very long text very very long text',
-        isComplete: false,
-      },
-    ],
+    todoList: [],
     deletedList: [],
+    currentId: 0,
   },
   getters: {
     getList(state) {
@@ -58,27 +40,30 @@ export default new Vuex.Store({
     deleteFromDeletedList: (state, payload) => {
       state.deletedList = state.deletedList.filter((el) => el.id !== payload);
     },
+    updateCurrentId: (state) => {
+      state.currentId += 1;
+    },
   },
   actions: {
     addList(context, payload) {
-      let currentId = 0;
-      const idArray = [];
-      context.state.todoList.forEach((el) => {
-        idArray.push(el.id);
-      });
-      currentId = idArray.length ? Math.max(...idArray) : 0;
+      const newId = context.state.currentId;
       const data = {
-        id: currentId + 1,
+        id: newId + 1,
         ...payload,
         isComplete: false,
       };
       context.commit('updateList', data);
+      context.commit('updateCurrentId');
     },
     getDeletedItem: (context, payload) => {
-      console.log(context, payload);
       const deletedItem = context.getters.getItemById(payload);
       context.commit('updateDeletedItem', deletedItem);
       context.commit('deleteFromList', payload);
+    },
+    restoreBack: (context, payload) => {
+      const restoredItem = context.state.deletedList.find((el) => (el.id === payload));
+      context.commit('updateList', restoredItem);
+      context.commit('deleteFromDeletedList', payload);
     },
   },
   modules: {

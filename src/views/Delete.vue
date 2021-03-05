@@ -5,7 +5,8 @@
       <ul class="list-group text-left">
         <li v-for="item in deletedList" :key="item.id" class="list-group-item relative">
           {{item.name}}
-          <button class="btn btn-sm btn-success btn-edit">Restore</button>
+          <button @click="restoreBack(item.id)"
+          class="btn btn-sm btn-success btn-edit">Restore</button>
           <button @click="deletePermanently(item.id)"
           class="btn btn-sm btn-danger btn-del">Delete</button>
         </li>
@@ -16,7 +17,7 @@
 
 <script>
 // @ is an alias to /src
-import { mapGetters, mapMutations } from 'vuex';
+import { mapGetters, mapMutations, mapActions } from 'vuex';
 
 export default {
   name: 'Delete',
@@ -29,6 +30,7 @@ export default {
     ...mapMutations({
       deletePermanently: 'deleteFromDeletedList',
     }),
+    ...mapActions(['restoreBack']),
   },
 };
 </script>
