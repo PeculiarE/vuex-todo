@@ -10,6 +10,21 @@ const routes = [
     name: 'Home',
     component: Home,
   },
+  {
+    path: '/create',
+    name: 'Create',
+    component: () => import(/* webpackChunkName: "create" */ '../views/Create.vue'),
+  },
+  {
+    path: '/recycle-bin',
+    name: 'Delete',
+    component: () => import(/* webpackChunkName: "delete" */ '../views/Delete.vue'),
+  },
+  {
+    path: '/view-page/:id',
+    name: 'ViewPage',
+    component: () => import(/* webpackChunkName: "view-page" */ '../views/ViewPage.vue'),
+  },
 ];
 
 const router = new VueRouter({
